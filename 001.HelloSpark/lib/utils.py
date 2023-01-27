@@ -15,6 +15,6 @@ def get_spark_app_config():
 
 def load_survey_df(spark, data_path):
     return spark.read \
-        .option("heder", "true") \
+        .option("header", "true") \
         .option("inferSchema", "true") \
         .csv(data_path)
