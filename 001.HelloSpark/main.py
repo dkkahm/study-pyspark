@@ -1,9 +1,9 @@
-import sys
+import os, sys
 
 from pyspark.sql import *
 
 from lib.logger import Log4j
-from lib.utils import get_spark_app_config, load_survey_df
+from lib.utils import get_spark_app_config, load_survey_df, count_by_country
 
 if __name__ == '__main__':
     conf = get_spark_app_config()
@@ -25,15 +25,10 @@ if __name__ == '__main__':
 
     partitioned_survey_df = survey_df.repartition(2)
 
-    filtered_survey_df = partitioned_survey_df \
-        .where("Age < 40") \
-        .select("Age", "Gender", "Country", "state")
-    grouped_df = filtered_survey_df.groupBy("Country")
-    count_df = grouped_df.count()
+    count_df = count_by_country(partitioned_survey_df)
 
     logger.info(count_df.collect())
 
-    input("Press Enter")
     spark.stop()
 
 
